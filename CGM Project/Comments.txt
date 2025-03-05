@@ -1,0 +1,173 @@
+#include <graphics.h>
+
+// Function to display a countdown before the rocket launch
+void showCountdown() {
+    char buffer[5];
+    setbkcolor(BLACK); // Set the background color to black
+    cleardevice(); // Clear the screen
+    setcolor(WHITE); // Set text color to white
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 6); // Set text style and size
+
+    outtextxy(600, 400, "Prepare for Launch!"); // Display initial message
+    delay(3000); // Wait for 3 seconds
+    cleardevice(); // Clear the screen
+
+    // Countdown loop from 10 to 0
+    for (int i = 10; i >= 0; i--) {
+        cleardevice(); // Clear the screen
+        sprintf(buffer, "%d", i); // Convert the number to a string
+        outtextxy(770, 400, buffer); // Display the countdown number
+        delay(1000); // Wait for 1 second
+    }
+
+    cleardevice(); // Clear the screen
+    outtextxy(750, 450, "Go!!"); // Display "Go!!" message
+    delay(1000); // Wait for 1 second
+    cleardevice(); // Clear the screen
+}
+
+// Function to draw stars in the background
+void drawStars() {
+    for (int i = 0; i < 200; i++) {
+        int x = rand() % 1600; // Random x-coordinate
+        int y = rand() % 1000; // Random y-coordinate
+        int brightness = rand() % 3; // Random brightness level
+        if (brightness == 0) {
+            putpixel(x, y, WHITE); // White star
+        } else if (brightness == 1) {
+            putpixel(x, y, LIGHTGRAY); // Light gray star
+        } else {
+            putpixel(x, y, YELLOW); // Yellow star
+        }
+    }
+}
+
+// Function to draw a nebula effect in the background
+void drawNebula() {
+    for (int i = 0; i < 2000; i++) {
+        int x = rand() % 1600; // Random x-coordinate
+        int y = rand() % 1000; // Random y-coordinate
+        int color = rand() % 3; // Random color
+        if (color == 0) {
+            putpixel(x, y, RED); // Red pixel
+        } else if (color == 1) {
+            putpixel(x, y, MAGENTA); // Magenta pixel
+        } else {
+            putpixel(x, y, LIGHTMAGENTA); // Light magenta pixel
+        }
+    }
+}
+
+// Function to draw planets with rings and craters
+void planet() {
+    // Draw a cyan planet with rings
+    setcolor(LIGHTGRAY);
+    circle(1100, 100, 90); // Main planet circle
+    setfillstyle(SOLID_FILL, CYAN);
+    floodfill(1105, 42, LIGHTGRAY);
+
+    // Rings around the planet
+    setcolor(LIGHTGRAY);
+    ellipse(1100, 100, 0, 360, 110, 40);
+    setcolor(WHITE);
+    ellipse(1100, 100, 0, 360, 115, 45);
+
+    // Craters on the planet
+    setcolor(DARKGRAY);
+    circle(1070, 80, 10);
+    setfillstyle(SOLID_FILL, DARKGRAY);
+    floodfill(1070, 80, DARKGRAY);
+
+    circle(1120, 120, 15);
+    setfillstyle(SOLID_FILL, DARKGRAY);
+    floodfill(1120, 120, DARKGRAY);
+
+    circle(1090, 140, 8);
+    setfillstyle(SOLID_FILL, DARKGRAY);
+    floodfill(1090, 140, DARKGRAY);
+
+    // A larger white planet with craters
+    setcolor(WHITE);
+    circle(1500, 600, 250);
+    setfillstyle(SOLID_FILL, WHITE);
+    floodfill(1500, 600, WHITE);
+
+    setcolor(DARKGRAY);
+    circle(1350, 500, 60);
+    setfillstyle(SOLID_FILL, DARKGRAY);
+    floodfill(1350, 500, DARKGRAY);
+
+    setcolor(DARKGRAY);
+    circle(1400, 700, 30);
+    setfillstyle(SOLID_FILL, DARKGRAY);
+    floodfill(1400, 700, DARKGRAY);
+}
+
+// Function to draw and animate a blinking star
+void blinkingStars() {
+    int x = rand() % 1600; // Random x-coordinate
+    int y = rand() % 1000; // Random y-coordinate
+    int size = rand() % 2 + 2; // Random size (2 or 3)
+    setcolor(WHITE);
+    setfillstyle(SOLID_FILL, WHITE);
+    fillellipse(x, y, size, size); // Draw a filled ellipse
+    delay(100); // Short delay for the blink
+}
+
+// Function to draw the rocket at specified coordinates
+void rocket(int rocketX, int rocketY) {
+    // Draw rocket body
+    setcolor(LIGHTGRAY);
+    rectangle(rocketX - 35, rocketY, rocketX + 35, rocketY + 150);
+    setfillstyle(SOLID_FILL, WHITE);
+    floodfill(rocketX - 30, rocketY + 5, LIGHTGRAY);
+
+    // Draw rocket head (triangular shape)
+    int points[] = {rocketX - 35, rocketY, rocketX + 35, rocketY, rocketX, rocketY - 50};
+    setfillstyle(SOLID_FILL, RED);
+    setcolor(LIGHTGRAY);
+    fillpoly(3, points);
+
+    // Draw rocket flames for propulsion
+    setcolor(DARKGRAY);
+    rectangle(rocketX - 5, rocketY + 241, rocketX + 5, rocketY + 250);
+    setfillstyle(SOLID_FILL, LIGHTRED);
+    floodfill(rocketX, rocketY + 243, DARKGRAY);
+}
+
+// Function to display an ending "Thank you" message
+void endingScene() {
+    setcolor(WHITE);
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 40); // Large text size
+    outtextxy(300, 350, "Thank you <3"); // Display thank-you message
+    delay(4000); // Display the message for 4 seconds
+    cleardevice(); // Clear the screen
+}
+
+int main() {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, ""); // Initialize graphics mode
+
+    setbkcolor(BLACK); // Set the background color to black
+    cleardevice(); // Clear the screen
+    showCountdown(); // Display the countdown animation
+
+    int rocketX = 700; // Initial rocket x-coordinate
+    int rocketY = 1300; // Initial rocket y-coordinate
+
+    // Rocket launch animation
+    for (int i = 0; i < 1800; i += 35) {
+        cleardevice(); // Clear the screen
+        drawStars(); // Draw stars
+        drawNebula(); // Draw nebula
+        planet(); // Draw planets
+        rocket(rocketX, rocketY - i); // Move the rocket upward
+        delay(200); // Short delay for smooth animation
+        blinkingStars(); // Add blinking stars for effect
+    }
+
+    endingScene(); // Display the ending scene
+    getch(); // Wait for a key press
+    closegraph(); // Close the graphics mode
+    return 0;
+}
